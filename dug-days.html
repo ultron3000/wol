@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dug Days | Pixar</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Stream all episodes of Dug Days, the heartwarming Pixar animated series following Dug the dog from Up as he adjusts to his new life with Carl.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dug: {
+              primary: '#FF9E3F',
+              secondary: '#FF6B6B',
+              dark: '#2D3748',
+              light: '#F7FAFC'
+            }
+          },
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif'],
+            display: ['Rubik', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Rubik:wght@700&display=swap" rel="stylesheet">
+  <style>
+    .gradient-text {
+      background: linear-gradient(90deg, #FF9E3F 0%, #FF6B6B 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(90deg, #FF9E3F 0%, #FF6B6B 100%);
+    }
+    
+    .video-header {
+      position: relative;
+      height: 80vh;
+      min-height: 600px;
+      overflow: hidden;
+    }
+    
+    .video-header video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      z-index: 0;
+      object-fit: cover;
+    }
+    
+    .video-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 100%);
+      z-index: 1;
+    }
+    
+    .header-content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .episode-card {
+      transition: all 0.3s ease;
+      perspective: 1000px;
+    }
+    
+    .episode-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    .episode-card:hover .episode-image {
+      transform: scale(1.05);
+    }
+    
+    .episode-image-container {
+      overflow: hidden;
+      border-radius: 12px 12px 0 0;
+    }
+    
+    .episode-image {
+      transition: transform 0.5s ease;
+    }
+    
+    .play-icon {
+      transition: all 0.3s ease;
+      box-shadow: 0 0 20px rgba(255, 158, 63, 0.5);
+    }
+    
+    .episode-card:hover .play-icon {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+    
+    .modal-enter {
+      animation: modalEnter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    
+    @keyframes modalEnter {
+      from {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+    
+    .pixar-logo {
+      width: 120px;
+      filter: drop-shadow(0 0 8px rgba(0,0,0,0.5));
+      transition: transform 0.3s ease;
+    }
+    
+    .pixar-logo:hover {
+      transform: scale(1.05);
+    }
+    
+    .nav-container {
+      background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+      backdrop-filter: blur(5px);
+    }
+    
+    .nav-link {
+      position: relative;
+    }
+    
+    .nav-link:after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -2px;
+      left: 0;
+      background: #FF9E3F;
+      transition: width 0.3s ease;
+    }
+    
+    .nav-link:hover:after {
+      width: 100%;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(90deg, #FF9E3F 0%, #FF6B6B 100%);
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 158, 63, 0.3);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 158, 63, 0.4);
+    }
+    
+    .btn-secondary {
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    .episode-badge {
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(5px);
+    }
+    
+    .scroll-indicator {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0) translateX(-50%);
+      }
+      40% {
+        transform: translateY(-20px) translateX(-50%);
+      }
+      60% {
+        transform: translateY(-10px) translateX(-50%);
+      }
+    }
+    
+    .character-card {
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(5px);
+    }
+    
+    .character-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .section-title {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .section-title:after {
+      content: '';
+      position: absolute;
+      width: 50%;
+      height: 3px;
+      bottom: -5px;
+      left: 0;
+      background: linear-gradient(90deg, #FF9E3F 0%, #FF6B6B 100%);
+      border-radius: 3px;
+    }
+    
+    .testimonial-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+    }
+    
+    .testimonial-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    .footer-link {
+      transition: all 0.2s ease;
+    }
+    
+    .footer-link:hover {
+      color: #FF9E3F;
+      transform: translateX(3px);
+    }
+    
+    .squirrel-animation {
+      animation: squirrelRun 15s linear infinite;
+    }
+    
+    @keyframes squirrelRun {
+      0% {
+        transform: translateX(-100px);
+      }
+      100% {
+        transform: translateX(calc(100vw + 100px));
+      }
+    }
+    
+    .floating {
+      animation: floating 3s ease-in-out infinite;
+    }
+    
+    @keyframes floating {
+      0% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+      100% {
+        transform: translateY(0px);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .video-header {
+        height: 70vh;
+        min-height: 500px;
+      }
+      
+      .header-content h1 {
+        font-size: 3rem;
+      }
+    }
+  </style>
+</head>
+<body class="bg-dug-dark text-dug-light font-sans">
+  <!-- Video Header -->
+  <div class="video-header">
+    <video autoplay muted loop playsinline>
+      <source src="https://imdb-video.media-imdb.com/vi3863987225/1434659607842-pgv4ql-1686587470179.mp4?Expires=1748799448&Signature=lVe9~XRff~UU~KP-uQtm~t4VBR5V8ZfLtcTZbcIatiqmBnkNklwZQDXRdBh785kKiUNY0z7I8cwCvagWqkUprzIwpV-K2MzBYDJEWm8zuXhbhNdm8KG5I8lOL3R8ut3280uMbldHP5i10Keapj1K8st9FWhszz1XwFGZCSI3dxQ4wX1Djlwt4wAy6k3L2vu0-HjCdp4yclg8~mpTZx-euApYKs1VfBMNFr~pMkFKi74UDg3P0aAr4LOsXzGF~1WmbzP7FR7eMCptAsA9QS3JxWneR6zhyhAfIbPWqvwATAtOoBlUrpFpZnVs-I5eoMK9OAZtlssDjSsyagsW5N31tQ__&Key-Pair-Id=APKAIFLZBVQZ24NQH3KA" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="video-overlay"></div>
+    
+    <div class="header-content">
+      <!-- Navigation -->
+      <div class="nav-container py-4 px-6">
+        <div class="container mx-auto flex justify-between items-center">
+          <div class="flex items-center space-x-4">
+            <img src="https://images.squarespace-cdn.com/content/v1/60241cb68df65b530cd84d95/1613495438818-408JDVSTB7NWSHVC20M7/logo.png?format=1500w" alt="Pixar" class="pixar-logo">
+            <h1 class="text-white font-bold text-xl"><span class="text-dug-primary">+</span></h1>
+          </div>
+
+          <nav class="hidden md:flex space-x-8">
+            <a href="#about" class="text-white nav-link">About</a>
+            <a href="#episodes" class="text-white nav-link">Episodes</a>
+            <a href="#characters" class="text-white nav-link">Characters</a>
+            <a href="#gallery" class="text-white nav-link">Gallery</a>
+          </nav>
+
+          <button class="md:hidden text-2xl text-white">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Title Content -->
+      <div class="container mx-auto px-4 flex-1 flex items-center">
+        <div class="max-w-4xl">
+          <div class="flex items-center mb-4">
+            <img src="https://yt3.ggpht.com/4lBlgctuLWYB0ZAAJEzaVSIjdn9knjoph7PDczzIuLR6VwFgrlVwz5tD4ALFjSlDvSlUzH36=s68-c-k-c0x00ffffff-no-rj" alt="Pixar" class="h-8 mr-4">
+            <span class="text-white font-semibold">ORIGINAL SERIES</span>
+          </div>
+          <h1 class="text-5xl md:text-7xl font-bold mb-4 gradient-text font-display tracking-tight">DUG DAYS</h1>
+          <div class="flex items-center space-x-4 mb-6">
+            <span class="bg-dug-primary text-black px-3 py-1 rounded-full text-sm font-semibold">NEW EPISODES</span>
+            <span class="text-gray-300">2021</span>
+            <span class="text-gray-300">•</span>
+            <span class="text-gray-300">5 EPISODES</span>
+            <span class="text-gray-300">•</span>
+            <span class="text-gray-300">TV-PG</span>
+          </div>
+          <p class="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl">
+            The beloved dog from Disney and Pixar's "Up" returns in this heartwarming series. Dug the dog adjusts to his new life with Carl, discovering the joys and challenges of suburban life through his uniquely canine perspective.
+          </p>
+          
+        </div>
+      </div>
+      
+      <div class="scroll-indicator">
+        <i class="fas fa-chevron-down text-white text-2xl animate-bounce"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Squirrel Animation -->
+  <div class="relative overflow-hidden h-0">
+    <img src="https://www.pixar.com/feature-films/up/assets/images/characters/squirrel.png" alt="Squirrel" class="absolute bottom-0 h-16 squirrel-animation">
+  </div>
+
+  
+    
+  <!-- Episodes Section -->
+  <section id="episodes" class="py-16">
+    <div class="container mx-auto px-4">
+      <div class="flex justify-between items-center mb-8">
+        <h2 class="text-3xl md:text-4xl font-bold section-title">EPISODES</h2>
+        <div class="flex items-center space-x-2">
+          <span class="text-gray-400">SEASON</span>
+          <div class="relative">
+            <select class="bg-gray-800 border border-gray-700 text-white rounded-full px-4 py-2 appearance-none focus:outline-none focus:ring-2 focus:ring-dug-primary">
+              <option>1</option>
+              <option disabled>2 (Coming Soon)</option>
+            </select>
+            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <i class="fas fa-chevron-down text-gray-400"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="episodes-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+    </div>
+  </section>
+
+  
+
+  <!-- Modal -->
+  <div id="playback-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-90 p-4">
+    <div class="relative w-full max-w-4xl bg-gray-900 rounded-xl overflow-hidden shadow-2xl modal-enter">
+      <button id="close-modal" class="absolute top-4 right-4 z-50 text-white hover:text-dug-primary text-2xl transition bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="aspect-w-16 aspect-h-9">
+        <video id="modal-video" class="w-full" controls poster="https://lumiere-a.akamaihd.net/v1/images/dug_days_hero_2x_3e1e0a3c.jpeg">
+          Your browser does not support the video element.
+        </video>
+      </div>
+      <div class="p-6">
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <h3 id="modal-title" class="text-2xl font-bold mb-1"></h3>
+            <div class="text-gray-400 text-sm">
+              <span>S1 • E<span id="episode-num"></span></span> • <span id="episode-runtime"></span> • <span class="text-dug-primary">★ <span id="episode-rating"></span></span>
+            </div>
+          </div>
+          <div class="flex space-x-3">
+            <button class="text-gray-400 hover:text-white transition">
+              <i class="fas fa-share-alt"></i>
+            </button>
+            <button class="text-gray-400 hover:text-white transition">
+              <i class="fas fa-ellipsis-h"></i>
+            </button>
+          </div>
+        </div>
+        <p id="modal-description" class="text-gray-300 mb-6"></p>
+        <div class="flex space-x-4">
+          <button id="play-episode" class="btn-primary text-black font-bold py-3 px-8 rounded-full flex items-center transition">
+            <i class="fas fa-play mr-2"></i> PLAY EPISODE
+          </button>
+          <button class="btn-secondary text-white font-semibold py-3 px-8 rounded-full flex items-center transition">
+            <i class="fas fa-plus mr-2"></i> WATCHLIST
+          </button>
+          <button class="btn-secondary text-white font-semibold py-3 px-4 rounded-full transition">
+            <i class="fas fa-thumbs-up"></i>
+          </button>
+        </div>
+        <div class="mt-6 pt-6 border-t border-gray-800">
+          <h4 class="text-sm font-semibold text-gray-400 mb-2">STARRING</h4>
+          <p class="text-gray-300 text-sm" id="modal-cast">Bob Peterson, Ed Asner, Jordan Nagai</p>
+          <h4 class="text-sm font-semibold text-gray-400 mt-4 mb-2">CREATED BY</h4>
+          <p class="text-gray-300 text-sm">Bob Peterson</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-gray-900 py-12 border-t border-gray-800">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between">
+        <div class="mb-8 md:mb-0">
+          <img src="https://images.squarespace-cdn.com/content/v1/60241cb68df65b530cd84d95/1613495438818-408JDVSTB7NWSHVC20M7/logo.png?format=1500w" alt="Pixar" class="h-12 mb-4">
+
+        
+          
+        
+              <a href="#" class="text-gray-400 hover:text-dug-primary transition text-xl"><i class="fab fa-twitter"></i></a>
+              <a href="#" class="text-gray-400 hover:text-dug-primary transition text-xl"><i class="fab fa-instagram"></i></a>
+              <a href="#" class="text-gray-400 hover:text-dug-primary transition text-xl"><i class="fab fa-facebook"></i></a>
+              <a href="#" class="text-gray-400 hover:text-dug-primary transition text-xl"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p class="text-gray-400 text-sm">© Pixar. All Rights Reserved.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const episodes = [
+      { 
+        title: "Squirrel!", 
+        year: 2021,
+        video: "https://macdn.hakunaymatata.com/resource/5f29777517efd68e173c6b5b0bb2351e.mp4?Expires=1749920944&Signature=CuDQOWKTbsMKsQhDwshpjDuZGWWChtUl4mOS4JrMrNtV8b8pcyuinOO34gMgN41XtAQOnjSJOqxRhxCQElXRnbCpcKcYjtj0OgrUCxafWzpP6jFKjh48~32vteQE8JvIiN1C3iEcPwwt-V91BnQ3L~7tJVyjai6u3LewpzjIJeM1~zB~mNiIpcsmRND~9e01eQGC8PAOFX9jZih7Prjzdpi5zAuqjsWvTIGrrCTq9MhuV3A~kYwbBgCwnB5SYexF0Cxh-vhaDeqphmOI-2YukcNSAZlNL5FVYkazyVDutXQOboQPkKs4sBxfkujCNRiSxK1eJZBqv7jh8ZChsaPqpQ__&Key-Pair-Id=KMHN1LQ1HEUPL", 
+        image: "https://wsrv.nl/?url=https://image.tmdb.org/t/p/original/lksiSXfkhVkMgJ04kfFkUzXqcYP.jpg",
+        runtime: "8 min",
+        rating: "8.5/10",
+        description: "Dug comes face to face with his sworn enemy.",
+        animators: "Bob Peterson",
+        music: "Michael Giacchino",
+        cast: "Bob Peterson, Ed Asner"
+      },
+      { 
+        title: "Puppies", 
+        year: 2021,
+        video: "https://macdn.hakunaymatata.com/resource/91ab1171970a527d3a58435370d4baa2.mp4?Expires=1749920978&Signature=Fd9fdqkbMIO9nXdkxB6wdMqZhiyShJU26~5LaSKsi9VRzHsRQT~duxGtLRUxCMIiLtu22KCwRRz82JIxoutO4ucK~Nn9XU4NlF4d-qFyp8bgXQNMgKi3c6KDjj0LgLkZ0wlWVsLT7ttwcGq9a1LAD~C0bIn5eEEVdMWgVi4~i-Q9HPgm70RJw3JuZfDpDKvtW2dfE3txrWTFI1QaI5yKsGaUoKp1gz4llSMUgxewv3LXC6rzHc7M9HcCGm5-o3Xdt~naFsyaLUbOAM01cgJyLTiRuRNyp869PWR2Yr74nu1sKZKLnmY3jww-XOXD77B41gaIkwzCn2aGrtu4fsur~g__&Key-Pair-Id=KMHN1LQ1HEUPL", 
+        image: "https://wsrv.nl/?url=https://image.tmdb.org/t/p/original/gS8Gsmn3aSI4nZjPcKgTrZOJd5E.jpg",
+        runtime: "8 min",
+        rating: "9.0/10",
+        description: "Dug learns that puppies are cute, but also a lot of work!",
+        animators: "Bob Peterson",
+        music: "Michael Giacchino",
+        cast: "Bob Peterson, Ed Asner"
+      },
+      { 
+        title: "Smell", 
+        year: 2021,
+        video: "https://macdn.hakunaymatata.com/resource/08cb6d8a41e81da76eb65146b22ce111.mp4?Expires=1749921010&Signature=AjDvJG1koKq6bUDyPPUhvjOe3AvPkfrk3dTDkTWe17IomkGCsjxA60mBfoQafFXRZnwQn5bcusx2nYbFA7R49Eb-S1I95c0WYhaaEZDQPH5VaSLBEk8sw7~AA0MPa5kaPAAubfV-HSci5W~ER3kTuWLTA1C7I1Cjs0PQcTM7hN2sWBAD9ZRyjbAzEcnECmtbmlWBYd4pNfyIOlDPRZ~bVTcLR-19-Y1XgthgSdlAjg~dm6IBDr7J8uMreL5uL6XtmeCR~t3Vms0kJRhkB3pYA7ohZr3y6AwYdXiJ39bRCTn2cCFdem2zeP5b8lS6UFgjkjgAZ2TQ9aEIKb7VDSSfpA__&Key-Pair-Id=KMHN1LQ1HEUPL", 
+        image: "https://wsrv.nl/?url=https://image.tmdb.org/t/p/original/z25T5QcktMdrK3QfX0P3W5wHoKO.jpg",
+        runtime: "8 min",
+        rating: "8.7/10",
+        description: "Dug smells something he has never smelled before.",
+        animators: "Bob Peterson",
+        music: "Michael Giacchino",
+        cast: "Bob Peterson, Ed Asner, Jordan Nagai"
+      },
+      { 
+        title: "Flowers", 
+        year: 2021,
+        video: "https://macdn.hakunaymatata.com/resource/8fb495c4374570fe91dcdc0fba9c23b9.mp4?Expires=1749921048&Signature=xqNvAtYC67OohJLNcm1ALvQ-MEKxN2RKNwLv~iZBM4Q-tjsWUcV5pmYrKJjx-IKvBdXc9obd-C87CwwD7OvZulX25jkP2OOvZuwIZfm8Um9FHebwLYNWxOHgjQb2DcwE5LePm5Y2v3Dsd2RtAJxrdxv2jhobbZbVlYOJXIaL3q9s5Iummeo5oITyu-4-dOJGKoX6Y5XPNj9cCzDasg1vPRNP~EDNc4mdyY57VOHUqF1wy4~lzQpOo0s8I~TIJVLeHrkNkJLbaa44Ba7eaeL3Pcj-z1Rxn~wKVjplbOmNUbjz-n~iciQNlSzamAA9EGEAeyUqdhAav999gjNHqWfbXg__&Key-Pair-Id=KMHN1LQ1HEUPL", 
+        image: "https://wsrv.nl/?url=https://image.tmdb.org/t/p/original/jULfvmjv3FTpdHAJp5kUlbM09Av.jpg",
+        runtime: "8 min",
+        rating: "9.2/10",
+        description: "Dug finds out he doesn't love fireworks as much as Carl does.",
+        animators: "Bob Peterson",
+        music: "Michael Giacchino",
+        cast: "Bob Peterson, Ed Asner"
+      },
+      { 
+        title: "Science", 
+        year: 2021,
+        video: "https://macdn.hakunaymatata.com/resource/0faeeed402d3822d16ca51ac11081290.mp4?Expires=1749920694&Signature=gOVM9pMyY-KLazYFYnzdC6EOXlmswIMzBVpKme9ZZEpNnSkUwMtmIfxAMlP5EaWqABY6GYrNkM9uIGbuIicZiXYZ2NBEXC~H6LhHapiYwO7MaknZJzEwJOXFOeO~L7ccuSJtoZ75PQ-nc~nw4~JEvHhm~0ZUNcaf1QEKFIQcQDb3AAGcUQcrq9uZxMGBqI-o4CXdjwwNlyY8-vasZwOnkhLxxrGlZqpx-xVoaVq5EKj9bo0hW8Ahre5PdAfahQfuN7xCNv7eW2PDVdpRZ4EsBaeogJCIgMoBvg6NLtPy5-iX2XLOkRaXoBtsnqPS3KqEmjP-NhcVuvsFcKfIxpt~yg__&Key-Pair-Id=KMHN1LQ1HEUPL", 
+        image: "https://wsrv.nl/?url=https://image.tmdb.org/t/p/original/lXcU9Cbler2kQu2nTytS1C8fHlw.jpg",
+        runtime: "8 min",
+        rating: "9.5/10",
+        description: 'Russell helps Dug find a new way to communicate with his "neighbors."',
+        animators: "Bob Peterson",
+        music: "Michael Giacchino",
+        cast: "Bob Peterson, Ed Asner"
+      }
+    ];
+
+    const container = document.getElementById('episodes-container');
+    const playbackModal = document.getElementById('playback-modal');
+    const closeModal = document.getElementById('close-modal');
+    const modalVideo = document.getElementById('modal-video');
+    const modalTitle = document.getElementById('modal-title');
+    const modalDescription = document.getElementById('modal-description');
+    const episodeNum = document.getElementById('episode-num');
+    const episodeRuntime = document.getElementById('episode-runtime');
+    const episodeRating = document.getElementById('episode-rating');
+    const episodeCast = document.getElementById('modal-cast');
+    const playEpisodeBtn = document.getElementById('play-episode');
+
+    function isStream(url) {
+      return url.includes('.m3u8') || url.includes('.txt');
+    }
+
+    function openModal(episode, episodeNumber) {
+      modalTitle.textContent = episode.title;
+      modalDescription.textContent = episode.description;
+      episodeNum.textContent = episodeNumber;
+      episodeRuntime.textContent = episode.runtime;
+      episodeRating.textContent = episode.rating;
+      episodeCast.textContent = episode.cast;
+      
+      // Set video source
+      if (isStream(episode.video)) {
+        modalVideo.innerHTML = '<source src="" type="video/mp4">';
+      } else {
+        modalVideo.src = episode.video;
+      }
+
+      playbackModal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      
+      // Play the video when Play Episode button is clicked
+      playEpisodeBtn.addEventListener('click', () => {
+        modalVideo.play();
+      });
+    }
+
+    function closeModalHandler() {
+      playbackModal.classList.add('hidden');
+      modalVideo.pause();
+      modalVideo.currentTime = 0;
+      document.body.style.overflow = '';
+    }
+
+    closeModal.addEventListener('click', closeModalHandler);
+
+    // Close modal when clicking outside
+    playbackModal.addEventListener('click', (e) => {
+      if (e.target === playbackModal) {
+        closeModalHandler();
+      }
+    });
+
+    // Render episode cards
+    episodes.forEach((episode, index) => {
+      const card = document.createElement('div');
+      card.className = 'episode-card bg-gray-800 rounded-xl overflow-hidden hover:shadow-lg transition duration-300';
+      card.innerHTML = `
+        <div class="episode-image-container relative">
+          <img src="${episode.image}" alt="${episode.title}" class="episode-image w-full h-48 object-cover">
+          <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 hover:opacity-100 transition">
+            <div class="play-icon absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-dug-primary bg-opacity-90 rounded-full w-12 h-12 flex items-center justify-center opacity-0 hover:opacity-100 transition">
+              <i class="fas fa-play text-black"></i>
+            </div>
+          </div>
+          <span class="absolute top-2 right-2 episode-badge text-white text-xs px-2 py-1 rounded">${episode.runtime}</span>
+        </div>
+        <div class="p-4">
+          <div class="flex justify-between items-start mb-1">
+            <h2 class="font-semibold">${episode.title}</h2>
+            <span class="text-dug-primary text-sm">${episode.rating}</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <p class="text-sm text-gray-400">Episode ${index + 1}</p>
+            <button class="text-gray-400 hover:text-dug-primary transition">
+              <i class="fas fa-ellipsis-h"></i>
+            </button>
+          </div>
+        </div>
+      `;
+      card.addEventListener('click', () => {
+        openModal(episode, index + 1);
+      });
+      container.appendChild(card);
+    });
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    // Mobile menu toggle
+    const mobileMenuButton = document.querySelector('button.md\\:hidden');
+    const mobileMenu = document.createElement('div');
+    mobileMenu.className = 'fixed inset-0 bg-gray-900 z-50 hidden flex-col items-center justify-center';
+    mobileMenu.innerHTML = `
+      <button class="absolute top-4 right-4 text-2xl text-white">
+        <i class="fas fa-times"></i>
+      </button>
+      <nav class="flex flex-col space-y-8 text-center">
+        <a href="#about" class="text-white text-2xl nav-link">About</a>
+        <a href="#episodes" class="text-white text-2xl nav-link">Episodes</a>
+        <a href="#characters" class="text-white text-2xl nav-link">Characters</a>
+        <a href="#gallery" class="text-white text-2xl nav-link">Gallery</a>
+      </nav>
+    `;
+    document.body.appendChild(mobileMenu);
+
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.remove('hidden');
+    });
+
+    mobileMenu.querySelector('button').addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+    });
+
+    // Make video header play/pause on hover
+    const headerVideo = document.querySelector('.video-header video');
+    
+    // Autoplay is handled by the autoplay attribute, but we'll ensure it plays
+    headerVideo.play().catch(e => {
+      console.log("Autoplay prevented, showing fallback");
+    });
+    
+    // Gallery image click handler
+    document.querySelectorAll('#gallery img').forEach(img => {
+      img.addEventListener('click', () => {
+        const modal = document.createElement('div');
+        modal.className = 'fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center p-4';
+        modal.innerHTML = `
+          <div class="relative max-w-4xl w-full">
+            <button class="absolute -top-12 right-0 text-white text-2xl">
+              <i class="fas fa-times"></i>
+            </button>
+            <img src="${img.src}" class="w-full h-auto max-h-screen object-contain">
+          </div>
+        `;
+        document.body.appendChild(modal);
+        
+        modal.querySelector('button').addEventListener('click', () => {
+          modal.remove();
+        });
+      });
+    });
+  </script>
+</body>
+</html>

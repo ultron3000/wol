@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Inside Out: The Series | Pixar Dream Productions</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Acclaimed director Paula Persimmon teams up with an overly confident daydream director to create the next big tween-dream hit for Riley at Dream Productions.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Rubik:wght@700&display=swap');
+    
+    :root {
+      --primary: #ff4f6d;
+      --secondary: #5e6cff;
+      --joy: #ffcc33;
+      --sadness: #5e6cff;
+      --anger: #ff4f6d;
+      --disgust: #8ac926;
+      --fear: #c77dff;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to bottom, #0f0c29, #302b63);
+      min-height: 100vh;
+      color: #fff;
+      scroll-behavior: smooth;
+    }
+    
+    .title-font {
+      font-family: 'Rubik', sans-serif;
+      text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    
+    .episode-card {
+      transition: all 0.3s ease;
+      perspective: 1000px;
+      transform-style: preserve-3d;
+    }
+    
+    .episode-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 30px rgba(0,0,0,0.3);
+    }
+    
+    .episode-card:hover .episode-image {
+      transform: scale(1.05);
+    }
+    
+    .episode-image-container {
+      overflow: hidden;
+      border-radius: 12px 12px 0 0;
+      position: relative;
+    }
+    
+    .episode-image {
+      transition: transform 0.5s ease;
+      transform-origin: center center;
+    }
+    
+    .play-icon {
+      transition: all 0.3s ease;
+      box-shadow: 0 0 30px rgba(255, 79, 109, 0.7);
+    }
+    
+    .episode-card:hover .play-icon {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+    
+    .gradient-text {
+      background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+    }
+    
+    .joy-bg { background-color: var(--joy); }
+    .sadness-bg { background-color: var(--sadness); }
+    .anger-bg { background-color: var(--anger); }
+    .disgust-bg { background-color: var(--disgust); }
+    .fear-bg { background-color: var(--fear); }
+    
+    .modal-enter {
+      animation: modalEnter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    
+    @keyframes modalEnter {
+      from {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+    
+    .video-header {
+      position: relative;
+      height: 90vh;
+      min-height: 700px;
+      overflow: hidden;
+    }
+    
+    .video-header video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      z-index: 0;
+      object-fit: cover;
+    }
+    
+    .video-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 100%);
+      z-index: 1;
+    }
+    
+    .header-content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .pixar-logo {
+      width: 140px;
+      filter: drop-shadow(0 0 10px rgba(0,0,0,0.7));
+      transition: transform 0.3s ease;
+    }
+    
+    .pixar-logo:hover {
+      transform: scale(1.1);
+    }
+    
+    .nav-container {
+      background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+    
+    .nav-container.scrolled {
+      background: rgba(0,0,0,0.9);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    }
+    
+    .nav-link {
+      position: relative;
+    }
+    
+    .nav-link:after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 3px;
+      bottom: -5px;
+      left: 0;
+      background: var(--primary);
+      transition: width 0.3s ease;
+      border-radius: 3px;
+    }
+    
+    .nav-link:hover:after {
+      width: 100%;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 20px rgba(255, 79, 109, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(255, 79, 109, 0.5);
+    }
+    
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+    
+    .btn-primary:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: all 0.5s ease;
+    }
+    
+    .btn-primary:hover:before {
+      left: 100%;
+    }
+    
+    .btn-secondary {
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .episode-badge {
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(5px);
+      border-radius: 20px;
+      font-weight: 600;
+    }
+    
+    .scroll-indicator {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0) translateX(-50%);
+      }
+      40% {
+        transform: translateY(-20px) translateX(-50%);
+      }
+      60% {
+        transform: translateY(-10px) translateX(-50%);
+      }
+    }
+    
+    .character-card {
+      transition: all 0.4s ease;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.05);
+      transform-style: preserve-3d;
+    }
+    
+    .character-card:hover {
+      transform: translateY(-10px) rotateX(5deg);
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    }
+    
+    .character-image {
+      transition: all 0.4s ease;
+      filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
+    }
+    
+    .character-card:hover .character-image {
+      transform: scale(1.05);
+    }
+    
+    .section-title {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .section-title:after {
+      content: '';
+      position: absolute;
+      width: 70%;
+      height: 4px;
+      bottom: -8px;
+      left: 15%;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+      border-radius: 4px;
+    }
+    
+    .testimonial-card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      transition: all 0.4s ease;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    
+    .testimonial-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+    }
+    
+    .footer-link {
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .footer-link:after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -2px;
+      left: 0;
+      background: var(--primary);
+      transition: width 0.3s ease;
+    }
+    
+    .footer-link:hover {
+      color: var(--primary);
+    }
+    
+    .footer-link:hover:after {
+      width: 100%;
+    }
+    
+    .emotion-tag {
+      transition: all 0.3s ease;
+      transform: translateZ(0);
+    }
+    
+    .emotion-tag:hover {
+      transform: scale(1.1) translateZ(0);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    
+    .parallax {
+      background-attachment: fixed;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+    
+    .mobile-menu {
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    
+    .mobile-menu.open {
+      transform: translateX(0);
+    }
+    
+    @media (max-width: 1024px) {
+      .video-header {
+        height: 80vh;
+        min-height: 600px;
+      }
+      
+      .header-content h1 {
+        font-size: 4rem;
+      }
+      
+      .parallax {
+        background-attachment: scroll;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .video-header {
+        height: 70vh;
+        min-height: 500px;
+      }
+      
+      .header-content h1 {
+        font-size: 3rem;
+      }
+    }
+    
+    /* Loading animation */
+    .loader {
+      width: 48px;
+      height: 48px;
+      border: 5px solid var(--primary);
+      border-bottom-color: transparent;
+      border-radius: 50%;
+      display: inline-block;
+      box-sizing: border-box;
+      animation: rotation 1s linear infinite;
+    }
+    
+    @keyframes rotation {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loading" class="fixed inset-0 bg-black z-50 flex items-center justify-center transition-opacity duration-500">
+    <div class="text-center">
+      <div class="loader mx-auto mb-4"></div>
+      <p class="text-white font-semibold">Loading Pixar Dream Productions</p>
+    </div>
+  </div>
+
+  <!-- Video Header -->
+  <div class="video-header">
+    <video autoplay muted loop playsinline id="header-video">
+      <source src="https://imdb-video.media-imdb.com/vi2375731481/1434659607842-pgv4ql-1732132117712.mp4?Expires=1748792018&Signature=I~IeA7apjx4~v2ojF63EkDmhbIjhxw7iqFClfLF2hgXUGVTvicbB1kGb6jSqYXWXcAW1MTSNUXYevMD74yL1q6c3wP1jcc9EL2f2LnkGB5ZMB-XnPT2CAxiv9GWLHVHU5ymx~KVnbwx2NlZD3D5~t9d5rnGD-PdLroHDSXpgtF2mqW8g0q9HevjFZMtj37E6KX8rx94DSLsdcvYI~H1wPDcN-pXcxvNZRJsnwEq2v94JaQJCY0YSLoVegY6sbLp5o57JzYTS10sJAjflfFBdhRyfor3c6ZKDvcAdMMtJxc3IGd~E2hm5AgDP8cfO2o-j-6xj5vngjdzNUt891q-ccg__&Key-Pair-Id=APKAIFLZBVQZ24NQH3KA" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="video-overlay"></div>
+    
+    <div class="header-content">
+      <!-- Navigation -->
+      <div class="nav-container fixed top-0 left-0 right-0 py-4 px-6 z-40" id="navbar">
+        <div class="container mx-auto flex justify-between items-center">
+          <div class="flex items-center space-x-4">
+            <img src="https://images.squarespace-cdn.com/content/v1/60241cb68df65b530cd84d95/1613495438818-408JDVSTB7NWSHVC20M7/logo.png?format=1500w" alt="Pixar" class="pixar-logo">
+          </div>
+          <button id="mobile-menu-button" class="lg:hidden text-2xl text-white">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div id="mobile-menu" class="mobile-menu fixed inset-0 bg-black bg-opacity-95 z-50 flex flex-col items-center justify-center p-6">
+        <button id="close-mobile-menu" class="absolute top-6 right-6 text-white text-3xl">
+          <i class="fas fa-times"></i>
+        </button>
+
+        <div class="mt-12 flex space-x-6">
+          <a href="#" class="text-white text-2xl"><i class="fab fa-twitter hover:text-pink-400 transition"></i></a>
+          <a href="#" class="text-white text-2xl"><i class="fab fa-instagram hover:text-pink-400 transition"></i></a>
+          <a href="#" class="text-white text-2xl"><i class="fab fa-facebook hover:text-pink-400 transition"></i></a>
+          <a href="#" class="text-white text-2xl"><i class="fab fa-youtube hover:text-pink-400 transition"></i></a>
+        </div>
+      </div>
+
+      <!-- Title Content -->
+      <div class="container mx-auto px-4 flex-1 flex items-center pt-20">
+        <div class="max-w-4xl">
+          <div class="flex items-center mb-4">
+            <img src="https://yt3.ggpht.com/4lBlgctuLWYB0ZAAJEzaVSIjdn9knjoph7PDczzIuLR6VwFgrlVwz5tD4ALFjSlDvSlUzH36=s68-c-k-c0x00ffffff-no-rj" alt="Pixar" class="h-10 mr-4">
+            <span class="text-white font-semibold tracking-wider">Dream Productions</span>
+          </div>
+          <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold mb-4 gradient-text title-font tracking-tight">INSIDE OUT</h1>
+          <div class="flex items-center flex-wrap gap-2 mb-6">
+            <span class="bg-pink-500 text-black px-3 py-1 rounded-full text-sm font-bold">TV Mini Series</span>
+            <span class="text-gray-300">2024</span>
+            <span class="text-gray-300">•</span>
+            <span class="text-gray-300">4 EPISODES</span>
+            <span class="text-gray-300">•</span>
+            <span class="text-gray-300">TV-PG</span>
+          </div>
+          <p class="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl leading-relaxed">
+            Acclaimed director Paula Persimmon teams up with an overly confident daydream director to create the next big tween-dream hit for Riley at Dream Productions.
+          </p>
+          
+          </div>
+        </div>
+      </div>
+      
+      <div class="scroll-indicator">
+        <i class="fas fa-chevron-down text-white text-3xl animate-bounce"></i>
+      </div>
+    </div>
+  </div>
+
+  
+    
+   
+    
+    <!-- Episodes Section -->
+    <section id="episodes" class="py-20 bg-gray-900">
+      <div class="container mx-auto px-4">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-bold section-title">EPISODES</h2>
+          <div class="flex items-center space-x-4 mt-4 md:mt-0">
+            <span class="text-gray-400">SEASON</span>
+            <div class="relative">
+              <select class="bg-gray-800 border border-gray-700 text-white rounded-full px-4 py-2 appearance-none focus:outline-none focus:ring-2 focus:ring-pink-500 cursor-pointer">
+                <option>1</option>
+                <option disabled>2 (Coming 2025)</option>
+              </select>
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <i class="fas fa-chevron-down text-gray-400"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="episodes-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+      </div>
+    </section>
+
+
+  <!-- Modal -->
+  <div id="playback-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-90 p-4">
+    <div class="relative w-full max-w-4xl bg-gray-900 rounded-xl overflow-hidden shadow-2xl modal-enter">
+      <button id="close-modal" class="absolute top-4 right-4 z-50 text-white hover:text-pink-500 text-2xl transition bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="aspect-w-16 aspect-h-9">
+        <video id="modal-video" class="w-full" controls poster="https://lumiere-a.akamaihd.net/v1/images/insideout_emotional_0c40d992.jpeg">
+          Your browser does not support the video element.
+        </video>
+      </div>
+      <div class="p-6">
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <h3 id="modal-title" class="text-2xl font-bold mb-1"></h3>
+            <div class="text-gray-400 text-sm">
+              <span>S1 • E<span id="episode-num"></span></span> • <span id="episode-runtime"></span> • <span class="text-yellow-500">★ <span id="episode-rating"></span></span>
+            </div>
+          </div>
+          <div class="flex space-x-3">
+            <button class="text-gray-400 hover:text-white transition">
+              <i class="fas fa-share-alt"></i>
+            </button>
+            <button class="text-gray-400 hover:text-white transition">
+              <i class="fas fa-ellipsis-h"></i>
+            </button>
+          </div>
+        </div>
+        <p id="modal-description" class="text-gray-300 mb-6"></p>
+        <div class="flex flex-wrap gap-4">
+
+        </div>
+        <div class="mt-6 pt-6 border-t border-gray-800">
+          <h4 class="text-sm font-semibold text-gray-400 mb-2">STARRING</h4>
+          <p class="text-gray-300 text-sm" id="modal-cast">Amy Poehler, Phyllis Smith, Lewis Black, Mindy Kaling, Bill Hader</p>
+          <h4 class="text-sm font-semibold text-gray-400 mt-4 mb-2">CREATED BY</h4>
+          <p class="text-gray-300 text-sm">Pete Docter, Ronnie del Carmen</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-black py-16 border-t border-gray-800">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col lg:flex-row justify-between items-start">
+        <div class="mb-8 lg:mb-0">
+          <div class="flex items-center space-x-4 mb-6">
+            <img src="https://images.squarespace-cdn.com/content/v1/60241cb68df65b530cd84d95/1613495438818-408JDVSTB7NWSHVC20M7/logo.png?format=1500w" alt="Pixar" class="pixar-logo">
+            <h1 class="text-white text-xl font-bold"><span class="text-pink-500">Dream</span> Productions</h1>
+          </div>
+          <div class="flex space-x-4 mb-6">
+            <a href="#" class="text-gray-400 hover:text-pink-400 transition"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="text-gray-400 hover:text-pink-400 transition"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="text-gray-400 hover:text-pink-400 transition"><i class="fab fa-facebook"></i></a>
+            <a href="#" class="text-gray-400 hover:text-pink-400 transition"><i class="fab fa-youtube"></i></a>
+          </div>
+          <p class="text-gray-400 text-sm">© 2024 Pixar. All Rights Reserved.</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-16">
+         
+      <div class="mt-12 pt-8 border-t border-gray-800">
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Loading screen
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        document.getElementById('loading').style.opacity = '0';
+        setTimeout(function() {
+          document.getElementById('loading').style.display = 'none';
+        }, 500);
+      }, 1000);
+    });
+
+    const episodes = [
+      { 
+        title: "The Dream Team", 
+        year: 2024,
+        video: "https://vgorigin.hakunaymatata.com/resource/95e4203ec48fa4facc36aea603cb76ac.mp4?Expires=1749910420&KeyName=wefeed&Signature=bgw9XEy4PvAEcFrOfDbYXjc8puF-eGodp7g2ktnIJsxODagyRPCUWKWJ9cicAeNDLbtPLsgOBmT3gUzOYE93AA", 
+        image: "https://img10.hotstar.com/image/upload/f_auto/sources/r1/cms/prod/7394/1732608027394-h",
+        runtime: "24 min",
+        rating: "9.2/10",
+        description: "Now that Riley is a teenager, dream director Paula needs to age up her glitter-filled production.",
+        animators: "Pete Docter, Ronnie del Carmen",
+        music: "Michael Giacchino",
+        cast: "Amy Poehler, Phyllis Smith, Lewis Black"
+      },
+      { 
+        title: "Out of Body", 
+        year: 2024,
+        video: "https://macdn.hakunaymatata.com/resource/2a5a2873b79b71d091eefaf8c4a5c11b.mp4?Expires=1749911622&Signature=ZRtFWldG0vuRb6Gpun69WKSgmh3AXLpsWOU2rbRJa2GX4eiKEzeAOM9~AXM9xsPypbA4P9jPXB4n8pwbh2I1vDZ3EGbAeaMzn52HYUr~mGPEm0D9Iv9zB1Ro6v4iNr0jhsOrEoUmi4OHc6hVhmQhhP1I2~g6VidTmzVlSrsKbEt06ZoMP80pzlxeMc8-hLgCWZgM4COi8dJba6Q~s7o-jAZWtfHMGw~aMftV5bM1q74J4ro1Ddh0xonZFbCaGmRwYn3sv77L0MT179DYJ1zBn2dbe-E7wbpI5pDkOd0Y3WEWhSSHjbB46MB2tCk29ZdU2y~CcqJ-jaIjRDsfTWwUhw__&Key-Pair-Id=KMHN1LQ1HEUPL", 
+        image: "https://img10.hotstar.com/image/upload/f_auto/sources/r1/cms/prod/5552/1732608045552-h",
+        runtime: "22 min",
+        rating: "9.4/10",
+        description: "Xeni becomes Paula's new assistant director, but struggle making a new hit while Janelle's debut dream is a huge hit.",
+        animators: "Pete Docter, Ronnie del Carmen",
+        music: "Michael Giacchino",
+        cast: "Amy Poehler, Mindy Kaling, Bill Hader"
+      },
+      { 
+        title: "Romance!", 
+        year: 2024,
+        video: "https://macdn.hakunaymatata.com/resource/0ff3a1b0f7a164d7a58611ae3f8c5105.mp4?Expires=1749913059&Signature=vp91M-DqO7XtoKXvRxGpzXC1xdzKG6sTspBUalP7-PxpcivImazXv-CxEkIt1DKGN0uWXYxG0E~dRwR7eYTIiSJ1Zxx8IWeSzEkkAyCVtcJ15DhqK392HEqhmQtyvAxBJVpQbwL1PUJvyShGy5kfroMV0SHBlFkpZKkzczly9WiUYM3TLu1W1FhPvVDMIj6ttQ4gXnCP4lNI~zpwTBN2g3NfS3Az1ezccz5ETIHJ37IFBVDqltsUsoz-TsnBAq4r1HBRcFBAFiMs6wrkcbH6Zlwx3A0xNj1HaEUMQZHRDkfFczoWRKTfSsX~lV9OizfGHFLEpXyhFStsrIDWEINmJA__&Key-Pair-Id=KMHN1LQ1HEUPL", 
+        image: "https://img10.hotstar.com/image/upload/f_auto/sources/r1/cms/prod/5591/1732608055591-h",
+        runtime: "21 min",
+        rating: "9.6/10",
+        description: "Paula and Xeni's production goes off the rails, leading to dangerous behavior when Riley sleepwalks.",
+        animators: "Pete Docter, Ronnie del Carmen",
+        music: "Michael Giacchino",
+        cast: "Amy Poehler, Phyllis Smith, Lewis Black"
+      },
+      { 
+        title: "A Night to Remember", 
+        year: 2024,
+        video: "https://macdn.hakunaymatata.com/resource/ca8059568a1059f254415d0789b1281a.mp4?Expires=1749910852&Signature=MJ9Y-spCATyMCBKTZ6eF1yZ79iR40WvKBWtH~utF4eJ-XVijs8Fu~f0XQ9fB~~0wR4s1smGwWYqsiUDf~HCfpNSQpvd~tSkgXH71DIrGBy7hI-qau9C38hEg0-iKG795AjQLnUOJ8btVsOoePXNpJZ7V0ALPNHKeZs0A0VTJEJsuOVmW8AK2FaqWsotTPQ-uGc01l3XFDjlHdx5thfyetY1OV0siAcSjwDI8lKQ-UYPD3cCfdmTlpk761MDk5FoH6L4fOE9wfIpts7FsdC1b7QEiwGsSNr7SRnLhhPT9op3OGHM1XEqMfW~xXAGqi9PZBbZn6ghgw22sioD2BCMw7g__&Key-Pair-Id=KMHN1LQ1HEUPL", 
+        image: "https://img10.hotstar.com/image/upload/f_auto/sources/r1/cms/prod/5596/1732608105596-h",
+        runtime: "28 min",
+        rating: "9.9/10",
+        description: "Paula and Xeni team up to stop a nightmare, creating a new dream that may give Riley what she needs.",
+        animators: "Pete Docter, Ronnie del Carmen",
+        music: "Michael Giacchino",
+        cast: "Amy Poehler, Phyllis Smith, Lewis Black, Mindy Kaling, Bill Hader"
+      }
+    ];
+
+    const container = document.getElementById('episodes-container');
+    const playbackModal = document.getElementById('playback-modal');
+    const closeModal = document.getElementById('close-modal');
+    const modalVideo = document.getElementById('modal-video');
+    const modalTitle = document.getElementById('modal-title');
+    const modalDescription = document.getElementById('modal-description');
+    const episodeNum = document.getElementById('episode-num');
+    const episodeRuntime = document.getElementById('episode-runtime');
+    const episodeRating = document.getElementById('episode-rating');
+    const episodeCast = document.getElementById('modal-cast');
+    const playEpisodeBtn = document.getElementById('play-episode');
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const closeMobileMenu = document.getElementById('close-mobile-menu');
+    const navbar = document.getElementById('navbar');
+    const headerVideo = document.getElementById('header-video');
+
+    // Mobile menu toggle
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
+
+    closeMobileMenu.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 100) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    function isStream(url) {
+      return url.includes('.m3u8') || url.includes('.txt');
+    }
+
+    function openModal(episode, episodeNumber) {
+      modalTitle.textContent = episode.title;
+      modalDescription.textContent = episode.description;
+      episodeNum.textContent = episodeNumber;
+      episodeRuntime.textContent = episode.runtime;
+      episodeRating.textContent = episode.rating;
+      episodeCast.textContent = episode.cast;
+      
+      // Set video source
+      if (isStream(episode.video)) {
+        // For streaming URLs, we'd typically use a player like HLS.js
+        // Here we'll just show a placeholder
+        modalVideo.innerHTML = '<source src="" type="video/mp4">';
+      } else {
+        modalVideo.src = episode.video;
+      }
+
+      playbackModal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      
+      // Play the video when Play Episode button is clicked
+      playEpisodeBtn.addEventListener('click', () => {
+        modalVideo.play();
+      });
+    }
+
+    function closeModalHandler() {
+      playbackModal.classList.add('hidden');
+      modalVideo.pause();
+      modalVideo.currentTime = 0;
+      document.body.style.overflow = '';
+    }
+
+    closeModal.addEventListener('click', closeModalHandler);
+
+    // Close modal when clicking outside
+    playbackModal.addEventListener('click', (e) => {
+      if (e.target === playbackModal) {
+        closeModalHandler();
+      }
+    });
+
+    // Render episode cards
+    episodes.forEach((episode, index) => {
+      const card = document.createElement('div');
+      card.className = 'episode-card bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition';
+      card.innerHTML = `
+        <div class="episode-image-container relative">
+          <img src="${episode.image}" alt="${episode.title}" class="episode-image w-full h-48 object-cover">
+          <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 transition">
+            <div class="play-icon absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-pink-500 bg-opacity-90 rounded-full w-12 h-12 flex items-center justify-center opacity-0 transition">
+              <i class="fas fa-play text-white"></i>
+            </div>
+          </div>
+          <span class="absolute top-2 right-2 episode-badge text-white text-xs px-2 py-1 rounded">${episode.runtime}</span>
+        </div>
+        <div class="p-4">
+          <div class="flex justify-between items-start mb-1">
+            <h2 class="font-semibold text-white">${episode.title}</h2>
+            <span class="text-yellow-500 text-sm">${episode.rating}</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <p class="text-sm text-gray-400">Episode ${index + 1}</p>
+            <button class="text-gray-400 hover:text-pink-500 transition">
+              <i class="fas fa-ellipsis-h"></i>
+            </button>
+          </div>
+        </div>
+      `;
+      card.addEventListener('click', () => {
+        openModal(episode, index + 1);
+      });
+      container.appendChild(card);
+    });
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        // Close mobile menu if open
+        if (mobileMenu.classList.contains('open')) {
+          mobileMenu.classList.remove('open');
+          document.body.style.overflow = '';
+        }
+        
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    // Try to autoplay video (with error handling)
+    const playVideo = () => {
+      const promise = headerVideo.play();
+      
+      if (promise !== undefined) {
+        promise.catch(error => {
+          // Auto-play was prevented
+          headerVideo.controls = true;
+        });
+      }
+    };
+    
+    // Try to play when page loads
+    playVideo();
+    
+    // Also try when user interacts with the page
+    document.addEventListener('click', playVideo, { once: true });
+  </script>
+</body>
+</html>

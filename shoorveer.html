@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shoorveer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="When an imminent attack threatens India, an elite unit undertakes a mission that will test the limits of their courage and grit.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Rubik:wght@700&display=swap');
+    
+    :root {
+      --primary: #f6d365;
+      --secondary: #fda085;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to bottom, #000000, #1a1a2e);
+      min-height: 100vh;
+      color: #fff;
+    }
+    
+    .title-font {
+      font-family: 'Rubik', sans-serif;
+    }
+    
+    .episode-card {
+      transition: all 0.3s ease;
+      perspective: 1000px;
+    }
+    
+    .episode-card:hover {
+      transform: translateY(-8px);
+    }
+    
+    .episode-card:hover .episode-image {
+      transform: scale(1.05);
+    }
+    
+    .episode-image-container {
+      overflow: hidden;
+      border-radius: 12px 12px 0 0;
+    }
+    
+    .episode-image {
+      transition: transform 0.5s ease;
+    }
+    
+    .play-icon {
+      transition: all 0.3s ease;
+      box-shadow: 0 0 20px rgba(246, 211, 101, 0.5);
+    }
+    
+    .episode-card:hover .play-icon {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+    
+    .gradient-text {
+      background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+    }
+    
+    .modal-enter {
+      animation: modalEnter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    
+    @keyframes modalEnter {
+      from {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+    
+    .video-header {
+      position: relative;
+      height: 80vh;
+      min-height: 600px;
+      overflow: hidden;
+    }
+    
+    .video-header video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      z-index: 0;
+      object-fit: cover;
+    }
+    
+    .video-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 100%);
+      z-index: 1;
+    }
+    
+    .header-content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .pixar-logo {
+      width: 120px;
+      filter: drop-shadow(0 0 8px rgba(0,0,0,0.5));
+      transition: transform 0.3s ease;
+    }
+    
+    .pixar-logo:hover {
+      transform: scale(1.05);
+    }
+    
+    .nav-container {
+      background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+      backdrop-filter: blur(5px);
+    }
+    
+    .nav-link {
+      position: relative;
+    }
+    
+    .nav-link:after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -2px;
+      left: 0;
+      background: var(--primary);
+      transition: width 0.3s ease;
+    }
+    
+    .nav-link:hover:after {
+      width: 100%;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(246, 211, 101, 0.3);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(246, 211, 101, 0.4);
+    }
+    
+    .btn-secondary {
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    .episode-badge {
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(5px);
+    }
+    
+    .scroll-indicator {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0) translateX(-50%);
+      }
+      40% {
+        transform: translateY(-20px) translateX(-50%);
+      }
+      60% {
+        transform: translateY(-10px) translateX(-50%);
+      }
+    }
+    
+    .character-card {
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(5px);
+    }
+    
+    .character-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .section-title {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .section-title:after {
+      content: '';
+      position: absolute;
+      width: 50%;
+      height: 3px;
+      bottom: -5px;
+      left: 0;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+      border-radius: 3px;
+    }
+    
+    .testimonial-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+    }
+    
+    .testimonial-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    .footer-link {
+      transition: all 0.2s ease;
+    }
+    
+    .footer-link:hover {
+      color: var(--primary);
+      transform: translateX(3px);
+    }
+    
+    @media (max-width: 768px) {
+      .video-header {
+        height: 70vh;
+        min-height: 500px;
+      }
+      
+      .header-content h1 {
+        font-size: 3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Video Header -->
+  <div class="video-header">
+    <video autoplay muted loop playsinline>
+      <source src="https://imdb-video.media-imdb.com/vi3392324121/1434659607842-pgv4ql-1657078480047.mp4?Expires=1748978570&Signature=NJZH8mpbUqpM6dBWgVF-J5So9Jl7S1ad9NLmcEvBiIvfGTJs12Xb52aJuOkMawX4MhH5OU9zs7EivnytpsEUy2Vs3tm7fZt0V6Fq5NPwY9DAuFLNS~oVB4mRBTq32YJBFvme~00YgS8Qeu~M-5Y~Cb65mrPiReBQcX2NcIYUvlEbt0DrpBg1cFW7VHvo~TY31m8HyRtYJu6KILdzpTBkGrxUHQyvjlYO8FZ~HjX7lUfReVyWltnOfDIzhpdDe8Z5E6~V1jwlPVpWtUsUxqmrC0lOBTAMijkSN79z73T9VLmPuaQMAFiFVuRIFhgYDWkzLi9YKjkn7gVFW3ki3V7aAg__&Key-Pair-Id=APKAIFLZBVQZ24NQH3KA" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="video-overlay"></div>
+    
+    <div class="header-content">
+      <!-- Navigation -->
+      <div class="nav-container py-4 px-6">
+        <div class="container mx-auto flex justify-between items-center">
+          <div class="flex items-center space-x-4">
+           
+            
+          </div>
+
+          <button class="md:hidden text-2xl text-white">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Title Content -->
+      <div class="container mx-auto px-4 flex-1 flex items-center">
+        <div class="max-w-4xl">
+          <div class="flex items-center mb-4">
+            
+          </div>
+          <h1 class="text-5xl md:text-7xl font-bold mb-4 gradient-text title-font tracking-tight">Shoorveer</h1>
+          <div class="flex items-center space-x-4 mb-6">
+            <span class="bg-yellow-500 text-black px-3 py-1 rounded-full text-sm font-semibold">Season 1</span>
+            <span class="text-gray-300">2022</span>
+            <span class="text-gray-300">•</span>
+            <span class="text-gray-300">8 EPISODES</span>
+            <span class="text-gray-300">•</span>
+            <span class="text-gray-300">TV-Series</span>
+          </div>
+          <p class="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl">
+            When an imminent attack threatens India, an elite unit undertakes a mission that will test the limits of their courage and grit.
+          </p>
+
+          </div>
+        </div>
+      </div>
+      
+      <div class="scroll-indicator">
+        <i class="fas fa-chevron-down text-white text-2xl animate-bounce"></i>
+      </div>
+    </div>
+  </div>
+
+  
+    
+        
+    
+    
+    <!-- Episodes Section -->
+    <section id="episodes" class="py-16">
+      <div class="flex justify-between items-center mb-8">
+        <h2 class="text-3xl md:text-4xl font-bold section-title">EPISODES</h2>
+        <div class="flex items-center space-x-2">
+          <span class="text-gray-400">SEASON</span>
+          <div class="relative">
+            <select class="bg-gray-800 border border-gray-700 text-white rounded-full px-4 py-2 appearance-none focus:outline-none focus:ring-2 focus:ring-yellow-500">
+              <option>1</option>
+              <option disabled>2 (Coming Soon)</option>
+            </select>
+            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <i class="fas fa-chevron-down text-gray-400"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="episodes-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+    </section>
+  </main>
+
+  <!-- Modal -->
+  <div id="playback-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-90 p-4">
+    <div class="relative w-full max-w-4xl bg-gray-900 rounded-xl overflow-hidden shadow-2xl modal-enter">
+      <button id="close-modal" class="absolute top-4 right-4 z-50 text-white hover:text-yellow-500 text-2xl transition bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="aspect-w-16 aspect-h-9">
+        <video id="modal-video" class="w-full" controls poster="https://snworksceo.imgix.net/cds/c7806661-38e4-461d-ad6c-6f62e3abdc7f.sized-1000x1000.jpg?w=1000&dpr=2">
+          Your browser does not support the video element.
+        </video>
+      </div>
+      <div class="p-6">
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <h3 id="modal-title" class="text-2xl font-bold mb-1"></h3>
+            <div class="text-gray-400 text-sm">
+              <span>S1 • E<span id="episode-num"></span></span> • <span id="episode-runtime"></span> • <span class="text-yellow-500">★ <span id="episode-rating"></span></span>
+            </div>
+          </div>
+          <div class="flex space-x-3">
+            <button class="text-gray-400 hover:text-white transition">
+              <i class="fas fa-share-alt"></i>
+            </button>
+            <button class="text-gray-400 hover:text-white transition">
+              <i class="fas fa-ellipsis-h"></i>
+            </button>
+          </div>
+        </div>
+        <p id="modal-description" class="text-gray-300 mb-6"></p>
+        <div class="flex space-x-4">
+          <button id="play-episode" class="btn-primary text-black font-bold py-3 px-8 rounded-full flex items-center transition">
+            <i class="fas fa-play mr-2"></i> PLAY EPISODE
+          </button>
+          <button class="btn-secondary text-white font-semibold py-3 px-8 rounded-full flex items-center transition">
+            <i class="fas fa-plus mr-2"></i> WATCHLIST
+          </button>
+          <button class="btn-secondary text-white font-semibold py-3 px-4 rounded-full transition">
+            <i class="fas fa-thumbs-up"></i>
+          </button>
+        </div>
+        <div class="mt-6 pt-6 border-t border-gray-800">
+          <h4 class="text-sm font-semibold text-gray-400 mb-2">STARRING</h4>
+          <p class="text-gray-300 text-sm" id="modal-cast">Charlie Day, Carrie Brownstein, Will Forte, Mia Fowler</p>
+          <h4 class="text-sm font-semibold text-gray-400 mt-4 mb-2">CREATED BY</h4>
+          <p class="text-gray-300 text-sm">Brendan Beesley, Brandon Kern, Tom Zach</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-gray-900 py-12 border-t border-gray-800">
+
+          <div class="flex space-x-4 mb-6">
+            <a href="#" class="text-gray-400 hover:text-yellow-400 transition"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="text-gray-400 hover:text-yellow-400 transition"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="text-gray-400 hover:text-yellow-400 transition"><i class="fab fa-facebook"></i></a>
+            <a href="#" class="text-gray-400 hover:text-yellow-400 transition"><i class="fab fa-youtube"></i></a>
+          </div>
+          <p class="text-gray-400 text-sm">© 2025 Disney/Pixar. All Rights Reserved.</p>
+        </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const episodes = [
+      { 
+        title: "The Beginning", 
+        year: 2022,
+        video: "https://cdn4521.lada357janet.com:443/stream2/i-arch-400/464b62ba6b90e85df275c28f050d72f1/MJTMsp1RshGTygnMNRUR2N2MSlnWXZEdMNDZzQWe5MDZzMmdZJTO1R2RWVHZDljekhkSsl1VwYnWtx2cihVT25kMNFTTUhGbPR0Z610VZhnT6RGaORFbop1RRhnWqVEMPRVV18ERjBjWX1UP:1748895584:213.232.235.66:0674ab6ae9786ce09fc9a17cdbf422b7704e5cd0806ae18196026d662a9d6db0/./1080/index.m3u8", 
+        image: "https://img10.hotstar.com/image/upload/f_auto/sources/r1/cms/prod/7177/1738650977177-h",
+        runtime: "20 min",
+        rating: "8.2/10",
+      },
+      { 
+        title: "Agent 23", 
+        year: 2022,
+        video: "https://cdn4521.lada357janet.com:443/stream2/i-arch-400/a5b5ae66248be0039515bda55fa1d488/MJTMsp1RshGTygnMNRUR2N2MSlnWXZEdMNDZzQWe5MDZzMmdZJTO1R2RWVHZDljekhkSsl1VwYnWtx2cihVT2pVbFpnTyIFaO1mUq90VKtmWXlFNNpHbo9ERC1WWqV1dPdUT5lFVK1WTEVVP:1748896310:89.116.30.152:f6f60863e241d7e0c983220f52c2d16e2db5035c94fa848ca00ede1234a47c6a/./1080/index.m3u8", 
+        image: "https://img10.hotstar.com/image/upload/f_auto/sources/r1/cms/prod/2934/1302934-h-3ec5c3ccfb11",
+        runtime: "22 min",
+        rating: "8.4/10",
+      },
+      { 
+        title: "The Pack", 
+        year: 2022,
+        video: "https://cdn4521.lada357janet.com:443/stream2/i-arch-400/a5b5ae66248be0039515bda55fa1d488/MJTMsp1RshGTygnMNRUR2N2MSlnWXZEdMNDZzQWe5MDZzMmdZJTO1R2RWVHZDljekhkSsl1VwYnWtx2cihVT25kaRRjTqFlePdUV4pVbNJjWqpVaPdkUrlVba1WTEVUNPRkUp1kanVTWUlUP:1748896390:89.116.30.152:4eef9b1c1a3861b493cd2d189652b02886d5a20bbc2d2b1380d97a3fca030d8f/./1080/index.m3u8", 
+        image: "https://img10.hotstar.com/image/upload/f_auto/sources/r1/cms/prod/2940/1302940-h-36ec2941c9f6",
+        runtime: "21 min",
+        rating: "8.6/10",
+      },
+      { 
+        title: "Mayday! Mayday! Mayday!", 
+        year: 2022,
+        video: "https://cdn4521.lada357janet.com:443/stream2/i-arch-400/a5b5ae66248be0039515bda55fa1d488/MJTMsp1RshGTygnMNRUR2N2MSlnWXZEdMNDZzQWe5MDZzMmdZJTO1R2RWVHZDljekhkSsl1VwYnWtx2cihVT21ERNRjTU5UaN1mUp50VWxWTEFUMadVVyolaK1WWqdGNOdURzkFVNNTW6VUP:1748896408:89.116.30.152:41bab2dcddab1d015f680a06a79cd64eb1539688b88a30d028b13600d4f5bf33/./1080/index.m3u8", 
+        image: "https://img10.hotstar.com/image/upload/f_auto/sources/r1/cms/prod/2945/1302945-h-798e705add87",
+        runtime: "19 min",
+        rating: "8.8/10",
+      },
+      { 
+        title: "Plan B", 
+        year: 2022,
+        video: "https://cdn4521.lada357janet.com:443/stream2/i-arch-400/a5b5ae66248be0039515bda55fa1d488/MJTMsp1RshGTygnMNRUR2N2MSlnWXZEdMNDZzQWe5MDZzMmdZJTO1R2RWVHZDljekhkSsl1VwYnWtx2cihVT25kakpWTyUlMaRUV51EVRhnWqVVMZdVR55kMVNTWUZEbNpGZp50RVlXWUNWP:1748896429:89.116.30.152:8f15d9a12098f69856e5692269c39234830bab6c5f762f17b3bdf8dfcb8f4ef5/./1080/index.m3u8", 
+        image: "https://img10.hotstar.com/image/upload/f_auto/sources/r1/cms/prod/2948/1302948-h-61a71cf82243",
+        runtime: "23 min",
+        rating: "9.0/10",
+      },
+      { 
+        title: "The Game Gegins Now", 
+        year: 2022,
+        video: "https://cdn4521.lada357janet.com:443/stream2/i-arch-400/a5b5ae66248be0039515bda55fa1d488/MJTMsp1RshGTygnMNRUR2N2MSlnWXZEdMNDZzQWe5MDZzMmdZJTO1R2RWVHZDljekhkSsl1VwYnWtx2cihVT2llMVJzTE1ENNR0Zw4ERWpmTykVeadURz4kerlXTqlVNORVSw40VNdXWqFUP:1748896456:89.116.30.152:ec26f79a663423cc3edf58aaa971861899f44a65c530674a1965c2cd49482008/./1080/index.m3u8", 
+        image: "https://img10.hotstar.com/image/upload/f_auto/sources/r1/cms/prod/2951/1302951-h-17d1640564e5",
+        runtime: "20 min",
+        rating: "9.2/10",
+      },
+      { 
+        title: "9 Minutes", 
+        year: 2022,
+        video: "https://cdn4521.lada357janet.com:443/stream2/i-arch-400/a5b5ae66248be0039515bda55fa1d488/MJTMsp1RshGTygnMNRUR2N2MSlnWXZEdMNDZzQWe5MDZzMmdZJTO1R2RWVHZDljekhkSsl1VwYnWtx2cihVT2lVbOtmTEVEMPRUSx80Rax2TUJUaap2ZwkFVnNzTHpUaNpWR140VZRTTt1UP:1748896481:89.116.30.152:ff85efdea2c437ee8e508effc6ff8bff60bb24d1aa9214a4e60dc19ba1e16383/./1080/index.m3u8",
+        image: "https://img10.hotstar.com/image/upload/f_auto/sources/r1/cms/prod/2953/1302953-h-3fef0d6cd639",
+        runtime: "22 min",
+        rating: "8.4/10",
+      },
+      { 
+        title: "Strike Back", 
+        year: 2022,
+        video: "https://cdn4521.lada357janet.com:443/stream2/i-arch-400/a5b5ae66248be0039515bda55fa1d488/MJTMsp1RshGTygnMNRUR2N2MSlnWXZEdMNDZzQWe5MDZzMmdZJTO1R2RWVHZDljekhkSsl1VwYnWtx2cihVT2l1VFRjTykVMOpXQ61ERO12TXZ0aNpXS31kMGpWW6xWbOR1Z3llakpmTHlUP:1748896505:89.116.30.152:fa1acf608cfe427df15a7103fb9aa743f8ff6d9b952d1155e66498821725e8c7/./1080/index.m3u8",
+        image: "https://img10.hotstar.com/image/upload/f_auto/sources/r1/cms/prod/2960/1302960-h-9c54fb166241",
+        runtime: "24 min",
+        rating: "9.4/10",
+      }
+    ];
+
+    const container = document.getElementById('episodes-container');
+    const playbackModal = document.getElementById('playback-modal');
+    const closeModal = document.getElementById('close-modal');
+    const modalVideo = document.getElementById('modal-video');
+    const modalTitle = document.getElementById('modal-title');
+    const modalDescription = document.getElementById('modal-description');
+    const episodeNum = document.getElementById('episode-num');
+    const episodeRuntime = document.getElementById('episode-runtime');
+    const episodeRating = document.getElementById('episode-rating');
+    const episodeCast = document.getElementById('modal-cast');
+    const playEpisodeBtn = document.getElementById('play-episode');
+
+    function isStream(url) {
+      return url.includes('.m3u8') || url.includes('.txt');
+    }
+
+    function openModal(episode, episodeNumber) {
+      modalTitle.textContent = episode.title;
+      modalDescription.textContent = episode.description;
+      episodeNum.textContent = episodeNumber;
+      episodeRuntime.textContent = episode.runtime;
+      episodeRating.textContent = episode.rating;
+      episodeCast.textContent = episode.cast;
+      
+      // Set video source
+      if (isStream(episode.video)) {
+        // For streaming URLs, we'd typically use a player like HLS.js
+        // Here we'll just show a placeholder
+        modalVideo.innerHTML = '<source src="" type="video/mp4">';
+      } else {
+        modalVideo.src = episode.video;
+      }
+
+      playbackModal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      
+      // Play the video when Play Episode button is clicked
+      playEpisodeBtn.addEventListener('click', () => {
+        modalVideo.play();
+      });
+    }
+
+    function closeModalHandler() {
+      playbackModal.classList.add('hidden');
+      modalVideo.pause();
+      modalVideo.currentTime = 0;
+      document.body.style.overflow = '';
+    }
+
+    closeModal.addEventListener('click', closeModalHandler);
+
+    // Close modal when clicking outside
+    playbackModal.addEventListener('click', (e) => {
+      if (e.target === playbackModal) {
+        closeModalHandler();
+      }
+    });
+
+    // Render episode cards
+    episodes.forEach((episode, index) => {
+      const card = document.createElement('div');
+      card.className = 'episode-card bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition';
+      card.innerHTML = `
+        <div class="episode-image-container">
+          <img src="${episode.image}" alt="${episode.title}" class="episode-image w-full h-48 object-cover">
+          <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 transition">
+            <div class="play-icon absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-yellow-500 bg-opacity-90 rounded-full w-12 h-12 flex items-center justify-center opacity-0 transition">
+              <i class="fas fa-play text-black"></i>
+            </div>
+          </div>
+          <span class="absolute top-2 right-2 episode-badge text-white text-xs px-2 py-1 rounded">${episode.runtime}</span>
+        </div>
+        <div class="p-4">
+          <div class="flex justify-between items-start mb-1">
+            <h2 class="font-semibold">${episode.title}</h2>
+            <span class="text-yellow-500 text-sm">${episode.rating}</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <p class="text-sm text-gray-400">Episode ${index + 1}</p>
+            <button class="text-gray-400 hover:text-yellow-500 transition">
+              <i class="fas fa-ellipsis-h"></i>
+            </button>
+          </div>
+        </div>
+      `;
+      card.addEventListener('click', () => {
+        openModal(episode, index + 1);
+      });
+      container.appendChild(card);
+    });
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    // Make video header play/pause on hover
+    const headerVideo = document.querySelector('.video-header video');
+    const videoHeader = document.querySelector('.video-header');
+    
+    // Autoplay is handled by the autoplay attribute, but we'll ensure it plays
+    headerVideo.play().catch(e => {
+      console.log("Autoplay prevented, showing fallback");
+    });
+    
+    // Mobile menu toggle (would need additional implementation)
+    const mobileMenuButton = document.querySelector('button.md\\:hidden');
+    mobileMenuButton.addEventListener('click', () => {
+      alert('Mobile menu would open here in a full implementation');
+    });
+  </script>
+</body>
+</html>
